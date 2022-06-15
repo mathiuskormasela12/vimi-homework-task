@@ -26,6 +26,7 @@
 		"no-undef": "off",
 		"no-tabs": "off",
 		"import/prefer-default-export": "off",
-		"react/function-component-definition": "off"
+		"react/function-component-definition": "off",
+		"max-len": "off"
 	}
 }
