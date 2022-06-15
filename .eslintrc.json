@@ -27,6 +27,7 @@
 		"no-tabs": "off",
 		"import/prefer-default-export": "off",
 		"react/function-component-definition": "off",
-		"max-len": "off"
+		"max-len": "off",
+		"no-eval": "off"
 	}
 }

@@ -40,33 +40,6 @@ const App: React.FC = () => {
     }));
   };
 
-  const handleArchivedData = async () => {
-    setState((currentState) => ({
-      ...currentState,
-      loading: true,
-    }));
-
-    try {
-      const data: IData[] = await filterTheArchivedData(state.data, state.sortingBy);
-
-      setTimeout(() => {
-        setState((currentState) => ({
-          ...currentState,
-          loading: false,
-          data,
-        }));
-      }, 500);
-    } catch (err) {
-      setTimeout(() => {
-        setState((currentState) => ({
-          ...currentState,
-          loading: false,
-          data: [],
-        }));
-      }, 500);
-    }
-  };
-
   const handleSelect = (value: IReactSelectValue) => {
     setState((currentState) => ({
       ...currentState,
@@ -75,8 +48,35 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
+    const handleArchivedData = async () => {
+      setState((currentState) => ({
+        ...currentState,
+        loading: true,
+      }));
+
+      try {
+        const data: IData[] = await filterTheArchivedData(state.data, state.sortingBy, state.keyword);
+
+        setTimeout(() => {
+          setState((currentState) => ({
+            ...currentState,
+            loading: false,
+            data,
+          }));
+        }, 500);
+      } catch (err) {
+        setTimeout(() => {
+          setState((currentState) => ({
+            ...currentState,
+            loading: false,
+            data: [],
+          }));
+        }, 500);
+      }
+    };
+
     handleArchivedData();
-  }, [state.sortingBy]);
+  }, [state.sortingBy, state.keyword]);
 
   return (
     <Hero>
