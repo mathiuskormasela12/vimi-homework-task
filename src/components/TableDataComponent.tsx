@@ -35,9 +35,6 @@ export const TableDataComponent: React.FC<ITableDataComponentProps> = (props) =>
             <TableData>
               {moment(item.createdOn).format('MMM DD, YYYY')}
             </TableData>
-            <TableData>
-              {item.archived ? 'Yes' : 'No'}
-            </TableData>
           </TableRow>
         ))}
       </>

@@ -22,7 +22,7 @@ import {
 import { Head, TableDataComponent } from './components';
 import { Sorting } from './constants';
 import db from './db/db.json';
-import { IAppStates, IData } from './interfaces';
+import { IAppStates, IData, IReactSelectValue } from './interfaces';
 import { filterTheArchivedData } from './hooks';
 
 const App: React.FC = () => {
@@ -30,6 +30,7 @@ const App: React.FC = () => {
     keyword: '',
     loading: false,
     data: db,
+    sortingBy: 'ASC',
   });
 
   const onChangeText = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
@@ -46,7 +47,7 @@ const App: React.FC = () => {
     }));
 
     try {
-      const data: IData[] = await filterTheArchivedData(state.data);
+      const data: IData[] = await filterTheArchivedData(state.data, state.sortingBy);
 
       setTimeout(() => {
         setState((currentState) => ({
@@ -66,9 +67,16 @@ const App: React.FC = () => {
     }
   };
 
+  const handleSelect = (value: IReactSelectValue) => {
+    setState((currentState) => ({
+      ...currentState,
+      sortingBy: value.value,
+    }));
+  };
+
   useEffect(() => {
     handleArchivedData();
-  }, []);
+  }, [state.sortingBy]);
 
   return (
     <Hero>
@@ -101,6 +109,24 @@ const App: React.FC = () => {
                   <Col flex={1} width={48}>
                     <Select
                       options={Sorting}
+                      placeholder="Sorting"
+                      defaultValue={{
+                        value: 'asc',
+                        label: 'Ascending',
+                      }}
+                      onChange={(value) => {
+                        if (JSON.parse(JSON.stringify(value)).value === 'ASC') {
+                          handleSelect({
+                            label: 'Ascending',
+                            value: 'ASC',
+                          });
+                        } else {
+                          handleSelect({
+                            label: 'Descending',
+                            value: 'DESC',
+                          });
+                        }
+                      }}
                     />
                   </Col>
                 </Row>
@@ -121,10 +147,7 @@ const App: React.FC = () => {
                         Type
                       </TableHead>
                       <TableHead>
-                        Created On
-                      </TableHead>
-                      <TableHead>
-                        Archived
+                        Created
                       </TableHead>
                     </TableRow>
                   </Thead>

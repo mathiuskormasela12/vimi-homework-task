@@ -7,3 +7,4 @@ export * from './IRowProps';
 export * from './IData';
 export * from './IAppStates';
 export * from './ITableDataComponentProps';
+export * from './IReactSelectValue';

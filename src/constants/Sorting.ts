@@ -2,11 +2,11 @@
 
 export const Sorting = [
   {
-    value: 'asc',
+    value: 'ASC',
     label: 'Ascending',
   },
   {
-    value: 'desc',
+    value: 'DESC',
     label: 'Descending',
   },
 ];
