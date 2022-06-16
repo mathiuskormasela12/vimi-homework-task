@@ -21,9 +21,17 @@ import {
 } from './styles';
 import { Head, TableDataComponent } from './components';
 import { Sorting } from './constants';
-import db from './db/db.json';
+import database from './db/db.json';
 import { IAppStates, IData, IReactSelectValue } from './interfaces';
 import { filterTheArchivedData } from './hooks';
+
+const db = database.map((item) => ({
+  ...item,
+  archived: String(item.archived).toLowerCase(),
+  name: String(item.name).toLowerCase(),
+  status: String(item.status).toLowerCase(),
+  type: String(item.type).toLowerCase(),
+}));
 
 const App: React.FC = () => {
   const [state, setState] = useState<IAppStates>({

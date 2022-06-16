@@ -155,4 +155,5 @@ export const TableData = styled.td`
 	padding: .8rem 0;
 	font-weight: ${Fonts.base};
 	font-size: .9rem;
+	text-transform: capitalize;
 `;

@@ -7,14 +7,12 @@ import { filterDataByName } from './filterDataByName';
 
 export const filterTheArchivedData = (data: IData[], sortingBy: SortingTypes, keyword: string): Promise<IData[]> => new Promise((resolve, reject) => {
   try {
-    let results: IData[] = [];
-    results = data.filter((item: IData) => !item.archived);
-
-    sortingData(results, sortingBy)
+    sortingData(data, sortingBy)
       .then((sortedData) => {
         filterDataByName(sortedData, keyword)
           .then((filteredData) => {
-            resolve(filteredData);
+            const finalData = filteredData.filter((item: IData) => item.archived === 'false');
+            resolve(finalData);
           })
           .catch(() => {
             resolve([]);

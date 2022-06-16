@@ -6,5 +6,5 @@ export interface IData {
 	status: string;
 	type: string;
 	createdOn: string;
-	archived: boolean;
+	archived: string;
 }

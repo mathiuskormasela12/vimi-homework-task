@@ -27,7 +27,7 @@ export const TableDataComponent: React.FC<ITableDataComponentProps> = (props) =>
               {item.name}
             </TableData>
             <TableData>
-              {item.status}
+              {item.status.toUpperCase()}
             </TableData>
             <TableData>
               {item.type}

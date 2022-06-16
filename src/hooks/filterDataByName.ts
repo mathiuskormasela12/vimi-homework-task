@@ -11,19 +11,37 @@ export const filterDataByName = (data: IData[], keyword: string): Promise<IData[
 
     if (keyword.length > 0) {
       if (keyword.startsWith('is:') && !keyword.startsWith('not:')) {
+        /*
+					I used any data type because, this object
+					will be assigned after the object was created.
+					If I use another data type, it will make an error
+					because in Typescript we can't assign object property
+					after the object was created.
+				*/
         const condition: any = {};
         const keywords = keyword.split(' ');
 
-        for (const key of keywords) {
+        for (let key of keywords) {
+          key = key.toLowerCase();
           // eslint-disable-next-line no-loop-func
-          data.forEach((item) => {
+          db.map((item) => ({
+            ...item,
+            archived: String(item.archived).toLowerCase(),
+            name: String(item.name).toLowerCase(),
+            status: String(item.status).toLowerCase(),
+            type: String(item.type).toLowerCase(),
+          })).forEach((item) => {
             if (String(item.archived) === key.replace('is:', '')) {
+              // this code will error if the condition object was created without any data type
               condition.archived = key.replace('is:', '');
             } else if (item.name === key.replace('is:', '')) {
+              // this code will error if the condition object was created without any data type
               condition.name = key.replace('is:', '');
             } else if (item.status === key.replace('is:', '')) {
+              // this code will error if the condition object was created without any data type
               condition.status = key.replace('is:', '');
             } else if (item.type === key.replace('is:', '')) {
+              // this code will error if the condition object was created without any data type
               condition.type = key.replace('is:', '');
             }
           });
@@ -33,13 +51,26 @@ export const filterDataByName = (data: IData[], keyword: string): Promise<IData[
           let conditionString: string = '';
 
           Object.keys(condition).forEach((item, index) => {
-            conditionString += `${index !== 0 ? ' && ' : ''} prop.${item} === '${Object.values(condition)[index]}'`;
+            conditionString += `${index !== 0 ? ' && ' : ''} prop.${item} === '${String(Object.values(condition)[index]).toLowerCase()}'`;
           });
 
+          results = db.map((item) => ({
+            ...item,
+            archived: String(item.archived).toLowerCase(),
+            name: String(item.name).toLowerCase(),
+            status: String(item.status).toLowerCase(),
+            type: String(item.type).toLowerCase(),
+          }))
           // eslint-disable-next-line no-unused-vars
-          results = data.filter((prop) => eval(conditionString));
+            .filter((prop) => eval(conditionString));
         } else {
-          results = db;
+          results = db.map((item) => ({
+            ...item,
+            archived: String(item.archived).toLowerCase(),
+            name: String(item.name).toLowerCase(),
+            status: String(item.status).toLowerCase(),
+            type: String(item.type).toLowerCase(),
+          }));
         }
       } else if (keyword.startsWith('not:')) {
         const secondCondition: any = {};
@@ -47,14 +78,24 @@ export const filterDataByName = (data: IData[], keyword: string): Promise<IData[
 
         for (const key of secondKeywords) {
           // eslint-disable-next-line no-loop-func
-          data.forEach((item) => {
+          db.map((item) => ({
+            ...item,
+            archived: String(item.archived).toLowerCase(),
+            name: String(item.name).toLowerCase(),
+            status: String(item.status).toLowerCase(),
+            type: String(item.type).toLowerCase(),
+          })).forEach((item) => {
             if (String(item.archived) === key.replace('not:', '')) {
+              // this code will error if the condition object was created without any data type
               secondCondition.archived = key.replace('not:', '');
             } else if (item.name === key.replace('not:', '')) {
+              // this code will error if the condition object was created without any data type
               secondCondition.name = key.replace('not:', '');
             } else if (item.status === key.replace('not:', '')) {
+              // this code will error if the condition object was created without any data type
               secondCondition.status = key.replace('not:', '');
             } else if (item.type === key.replace('not:', '')) {
+              // this code will error if the condition object was created without any data type
               secondCondition.type = key.replace('not:', '');
             }
           });
@@ -64,21 +105,54 @@ export const filterDataByName = (data: IData[], keyword: string): Promise<IData[
           let conditionStringSecond: string = '';
 
           Object.keys(secondCondition).forEach((item, index) => {
-            conditionStringSecond += `${index !== 0 ? ' && ' : ''} prop.${item} !== '${Object.values(secondCondition)[index]}'`;
+            conditionStringSecond += `${index !== 0 ? ' && ' : ''} prop.${item} !== '${String(Object.values(secondCondition)[index]).toLowerCase()}'`;
           });
 
           // eslint-disable-next-line no-unused-vars
-          results = data.filter((prop) => eval(conditionStringSecond));
+          results = db.map((item) => ({
+            ...item,
+            archived: String(item.archived).toLowerCase(),
+            name: String(item.name).toLowerCase(),
+            status: String(item.status).toLowerCase(),
+            type: String(item.type).toLowerCase(),
+          }))
+          // eslint-disable-next-line no-unused-vars
+            .filter((prop) => eval(conditionStringSecond));
         } else {
-          results = db;
+          results = db.map((item) => ({
+            ...item,
+            archived: String(item.archived).toLowerCase(),
+            name: String(item.name).toLowerCase(),
+            status: String(item.status).toLowerCase(),
+            type: String(item.type).toLowerCase(),
+          }));
         }
       } else {
-        results = data.filter((item: IData) => item.name.startsWith(keyword) || item.name.endsWith(keyword));
+        results = data.map((item) => ({
+          ...item,
+          archived: String(item.archived).toLowerCase(),
+          name: String(item.name).toLowerCase(),
+          status: String(item.status).toLowerCase(),
+          type: String(item.type).toLowerCase(),
+        })).filter((item: IData) => item.name.startsWith(keyword) || item.name.endsWith(keyword));
       }
     } else {
-      results = db;
+      results = db.map((item) => ({
+        ...item,
+        archived: String(item.archived).toLowerCase(),
+        name: String(item.name).toLowerCase(),
+        status: String(item.status).toLowerCase(),
+        type: String(item.type).toLowerCase(),
+      }));
     }
-    resolve(results);
+    const modifiedResults = results.map((item) => ({
+      ...item,
+      archived: String(item.archived).toLowerCase(),
+      name: String(item.name).toLowerCase(),
+      status: String(item.status).toLowerCase(),
+      type: String(item.type).toLowerCase(),
+    }));
+    resolve(modifiedResults);
   } catch (err) {
     reject(err);
   }
